@@ -1,0 +1,35 @@
+<%- include("partials/header", { title }) %>
+<section class="auth-wrap container py-5">
+  <div class="auth-card">
+    <p class="eyebrow">START YOUR PORTFOLIO</p>
+    <h1 class="h2 fw-bold">Create account</h1>
+    <p class="text-secondary">Use a password with 10+ characters, upper- and lower-case letters, and a number.</p>
+    <% if (errors.length) { %><div class="alert alert-danger" role="alert"><ul class="mb-0"><% errors.forEach((error) => { %><li><%= error %></li><% }) %></ul></div><% } %>
+    <form action="/auth/register" method="post" class="vstack gap-3" data-registration-form>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div><label class="form-label" for="name">Name</label><input class="form-control" id="name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="60" value="<%= values.name || '' %>"></div>
+      <div><label class="form-label" for="email">Email</label><input class="form-control" id="email" name="email" type="email" autocomplete="email" required maxlength="254" value="<%= values.email || '' %>"></div>
+      <div><label class="form-label" for="password">Password</label><input class="form-control" id="password" name="password" type="password" autocomplete="new-password" required minlength="10" aria-describedby="password-hint"><div class="form-text" id="password-hint">Use upper-case, lower-case, and a number.</div><div class="password-strength mt-2" aria-live="polite"></div></div>
+      <button class="btn btn-primary btn-lg mt-2" type="submit">Create account</button>
+    </form>
+    <p class="small text-secondary mt-4 mb-0">Already registered? <a href="/login">Sign in</a></p>
+  </div>
+</section>
+<script nonce="<%= cspNonce %>">
+  const registrationPassword = document.querySelector("#password");
+  const passwordFeedback = document.querySelector(".password-strength");
+  registrationPassword.addEventListener("input", () => {
+    const value = registrationPassword.value;
+    const score = [
+      value.length >= 10,
+      /[a-z]/.test(value),
+      /[A-Z]/.test(value),
+      /\d/.test(value)
+    ].filter(Boolean).length;
+    passwordFeedback.textContent = value
+      ? ["Needs work", "Needs work", "Getting there", "Good", "Strong"][score]
+      : "";
+    passwordFeedback.dataset.score = String(score);
+  });
+</script>
+<%- include("partials/footer") %>

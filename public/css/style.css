@@ -1,0 +1,81 @@
+:root {
+  --ink: #17233c;
+  --muted: #64748b;
+  --blue: #3156d3;
+  --pale: #f5f7fc;
+  --border: #e6eaf2;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  background: #fff;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+main { flex: 1; }
+a { color: var(--blue); }
+.site-header { border-bottom: 1px solid var(--border); background: rgba(255,255,255,.92); }
+.navbar-brand { color: var(--ink); letter-spacing: -.04em; font-size: 1.35rem; }
+.brand-dot { color: var(--blue); }
+.hero-section { background: radial-gradient(ellipse at 85% 20%, #edf1ff 0, transparent 37%), linear-gradient(180deg, #fff, #f8f9ff); }
+.py-lg-6 { padding-top: 6rem; padding-bottom: 6rem; }
+.eyebrow { color: var(--blue); font-size: .73rem; font-weight: 800; letter-spacing: .13em; }
+.text-gradient { color: var(--blue); }
+.preview-card, .panel-card, .auth-card, .feature-card, .project-card, .empty-state {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(32, 48, 88, .06);
+}
+.preview-card { padding: 1.75rem; }
+.preview-line { height: .7rem; width: 75%; border-radius: 1rem; background: #e9edf7; }
+.preview-line.short { width: 48%; margin-top: .8rem; }
+.mini-tag { padding: .35rem .65rem; background: #f0f3ff; border-radius: 2rem; color: #4357a5; font-size: .72rem; }
+.progress { height: .45rem; }
+.progress-bar { background-color: var(--blue); }
+.sample-progress { width: 65%; }
+.feature-card { height: 100%; padding: 1.5rem; transition: transform .2s ease, box-shadow .2s ease; }
+.feature-card:hover { transform: translateY(-4px); box-shadow: 0 16px 38px rgba(32,48,88,.1); }
+.feature-card h3 { margin-top: 1rem; font-size: 1.12rem; font-weight: 700; }
+.feature-card p { color: var(--muted); margin-bottom: 0; }
+.feature-number { color: var(--blue); font-weight: 800; font-size: .8rem; }
+.site-footer { margin-top: 3rem; background: var(--pale); color: var(--muted); font-size: .82rem; }
+.auth-wrap { max-width: 560px; }
+.auth-card { padding: clamp(1.5rem, 5vw, 2.5rem); }
+.auth-card h1 { margin-bottom: .35rem; }
+.form-control:focus, .form-select:focus { border-color: #8398f1; box-shadow: 0 0 0 .2rem rgba(49,86,211,.13); }
+.password-strength { min-height: 1.2rem; color: var(--muted); font-size: .78rem; }
+.password-strength[data-score="4"] { color: #198754; }
+.dashboard-wrap { min-height: 65vh; }
+.nav-pills .nav-link { color: var(--muted); }
+.nav-pills .nav-link.active { background: var(--blue); }
+.panel-card, .project-card, .empty-state { padding: 1.25rem; }
+.project-card + .project-card { margin-top: .85rem; }
+.project-card p { margin: .65rem 0 1rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.project-list { display: grid; }
+.empty-state { border-style: dashed; text-align: center; padding: 2.5rem 1rem; color: var(--muted); box-shadow: none; }
+.empty-icon { display: grid; place-items: center; margin: 0 auto 1rem; width: 2.5rem; height: 2.5rem; color: var(--blue); background: #eef1ff; border-radius: 50%; font-size: 1.4rem; }
+.status-pill { flex-shrink: 0; padding: .28rem .6rem; border-radius: 2rem; font-size: .68rem; font-weight: 700; text-transform: capitalize; }
+.status-planned { color: #5e6470; background: #edf0f4; }
+.status-in-progress { color: #79500b; background: #fff3d4; }
+.status-completed { color: #16704b; background: #def6e9; }
+.activity-list { padding-left: 1.1rem; font-size: .8rem; }
+.activity-list li + li { margin-top: .5rem; }
+.weather-result { border-radius: .75rem; padding: 1.25rem; background: var(--pale); }
+.github-avatar { border-radius: 50%; object-fit: cover; }
+.github-repositories { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .75rem; }
+.github-repository { min-width: 0; padding: 1rem; border: 1px solid var(--border); border-radius: .75rem; }
+.github-repository p { overflow-wrap: anywhere; }
+.error-page { min-height: 55vh; }
+
+@media (max-width: 575.98px) {
+  .navbar { align-items: flex-start; }
+  .site-footer .container { font-size: .75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}

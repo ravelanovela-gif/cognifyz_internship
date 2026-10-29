@@ -1,0 +1,97 @@
+<%- include("partials/header", { title }) %>
+<section class="dashboard-wrap container py-5">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+    <div><p class="eyebrow mb-2">YOUR WORKSPACE</p><h1 class="h2 fw-bold mb-1">My project portfolio</h1><p class="text-secondary mb-0">Keep track of what you are learning and shipping.</p></div>
+    <div class="nav nav-pills" aria-label="Dashboard sections">
+      <a class="nav-link active" href="#projects" data-route="projects">Projects</a>
+      <a class="nav-link" href="#weather" data-route="weather">Weather API</a>
+      <a class="nav-link" href="#github" data-route="github">GitHub OAuth</a>
+    </div>
+  </div>
+  <section class="dashboard-view" data-view="projects">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="panel-card">
+          <h2 class="h5 fw-bold" data-form-heading>Add a project</h2>
+          <p class="small text-secondary">Describe one of your internship or practice projects.</p>
+          <div class="alert alert-danger d-none" role="alert" data-form-errors></div>
+          <form id="project-form" class="vstack gap-3">
+            <input type="hidden" name="projectId">
+            <div><label class="form-label" for="project-title">Project title</label><input class="form-control" id="project-title" name="title" minlength="3" maxlength="80" required></div>
+            <div><label class="form-label" for="project-description">Description</label><textarea class="form-control" id="project-description" name="description" rows="4" minlength="10" maxlength="1000" required></textarea><div class="form-text"><span data-character-count>0</span>/1,000 characters</div></div>
+            <div><label class="form-label" for="project-status">Status</label><select class="form-select" id="project-status" name="status"><option value="planned">Planned</option><option value="in-progress">In progress</option><option value="completed">Completed</option></select></div>
+            <div class="d-flex gap-2"><button class="btn btn-primary" type="submit" data-submit-label>Save project</button><button class="btn btn-outline-secondary d-none" type="button" data-cancel-edit>Cancel</button></div>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h5 fw-bold mb-0">Your projects</h2><span class="small text-secondary"><%= projects.length %> total</span></div>
+        <div class="project-list" data-project-list>
+          <% if (!projects.length) { %><div class="empty-state" data-empty-state><div class="empty-icon">+</div><h3 class="h6 fw-bold">Your first project starts here</h3><p class="small mb-0">Add a project to see it in your portfolio.</p></div><% } %>
+          <% projects.forEach((project) => { %>
+            <article class="project-card" data-project-id="<%= project.id %>">
+              <div class="d-flex justify-content-between gap-3 align-items-start"><h3 class="h6 fw-bold mb-1 project-title"><%= project.title %></h3><span class="status-pill status-<%= project.status %>"><%= project.status.replace("-", " ") %></span></div>
+              <p class="text-secondary small project-description"><%= project.description %></p>
+              <div class="d-flex gap-2"><button class="btn btn-sm btn-outline-primary" type="button" data-edit-project="<%= project.id %>">Edit</button><button class="btn btn-sm btn-outline-danger" type="button" data-delete-project="<%= project.id %>">Delete</button></div>
+            </article>
+          <% }) %>
+        </div>
+        <div class="alert alert-info py-2 mt-3 small" role="status" data-announcement hidden></div>
+        <div class="panel-card mt-4">
+          <h2 class="h6 fw-bold">Recent activity</h2>
+          <% if (activity.length) { %><ul class="activity-list mb-0"><% activity.forEach((entry) => { %><li><strong><%= entry.action %></strong> <%= entry.project_title %><span class="text-secondary"> · <%= entry.created_at %></span></li><% }) %></ul><% } else { %><p class="small text-secondary mb-0">Your project changes will appear here.</p><% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="dashboard-view d-none" data-view="weather">
+    <div class="row justify-content-center"><div class="col-lg-8">
+      <div class="panel-card">
+        <p class="eyebrow">EXTERNAL API DEMO</p><h2 class="h4 fw-bold">Current weather</h2>
+        <p class="text-secondary">Search a city to fetch live data from Open-Meteo. Requests are cached briefly and rate-limited.</p>
+        <form class="input-group mb-3" data-weather-form><label class="visually-hidden" for="city">City</label><input class="form-control" id="city" name="city" maxlength="80" placeholder="Try Hyderabad" required><button class="btn btn-primary" type="submit">Check weather</button></form>
+        <div class="small text-danger" role="alert" data-weather-error></div>
+        <div data-weather-result aria-live="polite"></div>
+      </div>
+      <p class="small text-secondary mt-3">See the GitHub OAuth tab to connect a GitHub account and securely fetch public portfolio data.</p>
+    </div></div>
+  </section>
+  <section class="dashboard-view d-none" data-view="github">
+    <div class="row justify-content-center"><div class="col-lg-8">
+      <div class="panel-card">
+        <p class="eyebrow">OAUTH 2.0 · EXTERNAL API</p>
+        <h2 class="h4 fw-bold">GitHub portfolio</h2>
+        <p class="text-secondary">Authorize this app to read your GitHub profile and public repositories. The OAuth access token is used on the server for this request and is not stored.</p>
+        <% if (github) { %>
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <div class="d-flex align-items-center gap-3">
+              <% if (github.avatar_url) { %><img class="github-avatar" src="<%= github.avatar_url %>" alt="" width="56" height="56"><% } %>
+              <div><h3 class="h5 fw-bold mb-1"><a href="https://github.com/<%= github.login %>" rel="noreferrer" target="_blank">@<%= github.login %></a></h3><span class="small text-secondary">Connected <%= github.linked_at %></span></div>
+            </div>
+            <form action="/oauth/github/unlink" method="post">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="btn btn-sm btn-outline-danger" type="submit">Disconnect GitHub</button>
+            </form>
+          </div>
+          <% if (github.repositories.length) { %>
+            <div class="github-repositories">
+              <% github.repositories.forEach((repository) => { %>
+                <article class="github-repository">
+                  <h3 class="h6 fw-bold mb-1"><a href="<%= repository.url %>" rel="noreferrer" target="_blank"><%= repository.name %></a></h3>
+                  <% if (repository.description) { %><p class="small text-secondary mb-2"><%= repository.description %></p><% } %>
+                  <span class="small text-secondary"><%= repository.language || "Language not specified" %> · ★ <%= repository.stars %></span>
+                </article>
+              <% }) %>
+            </div>
+          <% } else { %><p class="small text-secondary mb-0">No public repositories were returned for this account.</p><% } %>
+        <% } else if (githubOAuthConfigured) { %>
+          <a class="btn btn-dark" href="/oauth/github">Connect GitHub</a>
+        <% } else { %>
+          <div class="alert alert-warning mb-0" role="status">GitHub OAuth needs a GitHub OAuth App. Follow the setup steps in README.md, add the credentials to .env, and restart the server.</div>
+        <% } %>
+      </div>
+      <p class="small text-secondary mt-3">OAuth protects account authorization with a short-lived, random state value. Only read:user scope is requested; repository data is public.</p>
+    </div></div>
+  </section>
+</section>
+<%- include("partials/footer") %>
